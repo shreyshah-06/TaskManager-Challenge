@@ -14,7 +14,7 @@ const TokenPage = () => {
 
       // Perform a GET request to fetch the user profile
       axios
-        .get('http://localhost:5000/api/profile', {
+        .get('https://taskmanager-challenge.onrender.com/api/profile', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

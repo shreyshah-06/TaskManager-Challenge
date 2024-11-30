@@ -34,7 +34,7 @@ const LoginPage = () => {
     };
 
     axios
-      .post("http://localhost:5000/api/auth/login", credentials)
+      .post("https://taskmanager-challenge.onrender.com/api/auth/login", credentials)
       .then((response) => {
         console.log("Login successful:", response.data);
 
@@ -161,7 +161,7 @@ const LoginPage = () => {
                   color="primary"
                   fullWidth
                   style={{ backgroundColor: "#1976d2" }}
-                  onClick={() => window.location.href = "http://localhost:5000/api/auth"}
+                  onClick={() => window.location.href = "https://taskmanager-challenge.onrender.com/api/auth"}
                 >
                   Login with Google
                 </Button>

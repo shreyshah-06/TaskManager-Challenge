@@ -22,7 +22,7 @@ const SignupPage = () => {
 
     try {
       // Send signup request to the server
-      const response = await axios.post('http://localhost:5000/api/auth/signup', {
+      await axios.post('https://taskmanager-challenge.onrender.com/api/auth/signup', {
         name,
         email,
         password,
@@ -147,7 +147,7 @@ const SignupPage = () => {
                   color="primary"
                   fullWidth
                   style={{ backgroundColor: '#1976d2' }}
-                  onClick={() => window.location.href = "http://localhost:5000/api/auth"}
+                  onClick={() => window.location.href = "https://taskmanager-challenge.onrender.com/api/auth"}
                 >
                   Sign Up with Google
                 </Button>

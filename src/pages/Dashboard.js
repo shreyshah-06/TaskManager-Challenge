@@ -50,7 +50,7 @@ const fetchTaskData = async () => {
   }
 
   try {
-    const response = await axios.get("http://localhost:5000/api/tasks/", {
+    const response = await axios.get("https://taskmanager-challenge.onrender.com/api/tasks/", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -76,7 +76,7 @@ const updateTask = async (id, updatedTask) => {
 
   try {
     const response = await axios.put(
-      `http://localhost:5000/api/tasks/${id}`,
+      `https://taskmanager-challenge.onrender.com/api/tasks/${id}`,
       updatedTask,
       {
         headers: {
@@ -134,7 +134,7 @@ const TaskManagementBoard = () => {
       }
 
       // Send POST request to create new task
-      await axios.post("http://localhost:5000/api/tasks/", newTask, {
+      await axios.post("https://taskmanager-challenge.onrender.com/api/tasks/", newTask, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -170,7 +170,7 @@ const TaskManagementBoard = () => {
       if (!token) {
         throw new Error("Authorization token is missing.");
       }
-      const response = await axios.delete(`http://localhost:5000/api/tasks/${taskId}`, {
+      const response = await axios.delete(`https://taskmanager-challenge.onrender.com/api/tasks/${taskId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -215,7 +215,7 @@ const TaskManagementBoard = () => {
       }
 
       // Update task in the backend
-      const updatedTaskResponse = await updateTask(editTask._id, {
+      await updateTask(editTask._id, {
         title: editTask.title,
         description: editTask.description,
         status: editTask.status,
@@ -253,7 +253,7 @@ const TaskManagementBoard = () => {
         }
 
         await axios.patch(
-          `http://localhost:5000/api/tasks/${id}/status`,
+          `https://taskmanager-challenge.onrender.com/api/tasks/${id}/status`,
           { status: newStatus },
           {
             headers: {
