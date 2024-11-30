@@ -16,7 +16,7 @@ function App() {
     } else {
       setIsAuthenticated(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <Router>
