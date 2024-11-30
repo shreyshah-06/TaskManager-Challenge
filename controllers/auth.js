@@ -2,6 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const {validateEmail, validatePassword} = require('../utils/validation')
 const { createAccessToken } = require("../utils/token");
+const {getUserURL} = require('../config/getGoogleAuthUrl');
 
 const signup = async (req, res) => {
   try {
@@ -53,7 +54,13 @@ const login = async (req, res) => {
   }
 };
 
+const googleAuth = async(req, res) => {
+  const url = getUserURL();
+  res.redirect(url);
+};
+
 module.exports = {
     login,
-    signup
+    signup,
+    googleAuth
 }
