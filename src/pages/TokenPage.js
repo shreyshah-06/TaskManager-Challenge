@@ -29,7 +29,7 @@ const TokenPage = () => {
             localStorage.setItem('imageUrl', profilePicture);
 
             // Redirect to localhost:3000
-            window.location.href = ' http://localhost:3000';
+            window.location.href = 'https://taskmanager-challenge.netlify.app';
           } else {
             console.error('Profile not found:', response.data.msg);
           }
