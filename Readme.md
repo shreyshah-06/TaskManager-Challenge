@@ -1,5 +1,7 @@
 # Task Manager
 
+[**Live Demo**](https://taskmanager-challenge.netlify.app/)
+
 ## Overview
 
 The **Task Manager** is a simple and efficient web-based application designed to help users manage and organize their tasks. Users can add, edit, and delete tasks, as well as track the completion status of each task. The app provides a clean and intuitive interface for seamless task management.
