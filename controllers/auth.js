@@ -1,10 +1,20 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const {validateEmail, validatePassword} = require('../utils/validation')
 const { createAccessToken } = require("../utils/token");
 
 const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    // Validate email format using the imported function
+    if (!validateEmail(email)) {
+      return res.status(400).json({ msg: "Please provide a valid email address." });
+    }
+
+    // Validate password strength using the imported function
+    if (!validatePassword(password)) {
+      return res.status(400).json({ msg: "Password must be at least 8 characters long and include a number and a special character." });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -34,7 +44,7 @@ const login = async (req, res) => {
     const token = createAccessToken({ id: user._id });
     res.status(200).json({
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, profilePicture:user.profilePicture },
       msg: "Login successful",
     });
   } catch (err) {
