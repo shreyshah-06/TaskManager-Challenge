@@ -19,6 +19,8 @@ import {
   FormControl,
 } from "@mui/material";
 import Navbar from "../components/navbar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -37,7 +39,7 @@ const formatDate = (dateString) => {
 
   const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(date);
 
-  return formattedDate; // Format as "DD-MM-YYYY, HH:mm:ss"
+  return formattedDate; // "DD-MM-YYYY, HH:mm:ss"
 };
 
 const fetchTaskData = async () => {
@@ -50,7 +52,7 @@ const fetchTaskData = async () => {
   try {
     const response = await axios.get("http://localhost:5000/api/tasks/", {
       headers: {
-        Authorization: `Bearer ${token}`, // Set the Authorization header with Bearer token
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -66,7 +68,7 @@ const fetchTaskData = async () => {
 
 const updateTask = async (id, updatedTask) => {
   console.log("here");
-  const token = localStorage.getItem("authToken"); // Get the token from localStorage
+  const token = localStorage.getItem("authToken");
 
   if (!token) {
     throw new Error("Authorization token is missing.");
@@ -78,13 +80,13 @@ const updateTask = async (id, updatedTask) => {
       updatedTask,
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Pass the token in the headers
-          "Content-Type": "application/json", // Set the content type to JSON
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       }
     );
 
-    return response.data; // Return the response data
+    return response.data; 
   } catch (error) {
     console.error("Error updating task:", error);
     throw error;
@@ -150,9 +152,44 @@ const TaskManagementBoard = () => {
         description: '',
         status: 'TODO'
       });
+      toast.success("Task added successfully!", {
+        position: "top-right",
+      });
     } catch (error) {
+      toast.error("Failed to add task.", {
+        position: "top-right",
+      });
       console.error("Error adding new task:", error);
-      alert("Failed to add task. Please try again.");
+    }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        throw new Error("Authorization token is missing.");
+      }
+      const response = await axios.delete(`http://localhost:5000/api/tasks/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+
+      );
+      if (response.status === 200) {
+        toast.success("Task deleted successfully!", {
+          position: "top-right",
+        });
+        const updatedTasks = await fetchTaskData();
+        setTasks(updatedTasks);
+      }
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      toast.error("Failed to delete task. Please try again.", {
+        position: "top-right",
+      });
     }
   };
   // Function to open the Edit Dialog
@@ -193,9 +230,15 @@ const TaskManagementBoard = () => {
       // Close the dialog and reset edit task
       setOpenEditDialog(false);
       setEditTask(null);
+      toast.success("Task updated successfully!", {
+        position: "top-right",
+      });
     } catch (error) {
+      toast.error("Failed to update task.", {
+        position: "top-right",
+      });
       console.error("Error saving edited task:", error);
-      alert("Failed to save task. Please try again.");
+      // alert("Failed to save task. Please try again.");
     }
   };
 
@@ -223,9 +266,15 @@ const TaskManagementBoard = () => {
         // Fetch updated tasks
         const updatedTasks = await fetchTaskData();
         setTasks(updatedTasks);
+        toast.success("Task status updated successfully!", {
+          position: "top-right",
+        });
       } catch (error) {
+        toast.error("Failed to update task status.", {
+          position: "top-right",
+        });
         console.error("Error updating task status:", error);
-        alert("Failed to update task status. Please try again.");
+        // alert("Failed to update task status. Please try again.");
       }
     } catch (error) {
       console.error("Error updating task status:", error);
@@ -296,6 +345,7 @@ const TaskManagementBoard = () => {
               variant="contained"
               color="error"
               sx={{ textTransform: "none" }}
+              onClick={() => handleDeleteTask(task._id)}
             >
               Delete
             </Button>
@@ -319,24 +369,24 @@ const TaskManagementBoard = () => {
   return (
     <Box>
       <Navbar />
-      <Grid 
-        item 
-        xs={12} 
-        sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: { xs: 'center', sm: 'flex-start' },
-          mt:1,
-          ml:2
+      <Grid
+        item
+        xs={12}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: { xs: "center", sm: "flex-start" },
+          mt: 1,
+          ml: 2,
         }}
       >
         <Button
           variant="contained"
           color="primary"
           sx={{
-            textTransform: 'none',
-            width: { xs: '100%', sm: 'auto' },
-            maxWidth: { xs: '300px', sm: 'none' }
+            textTransform: "none",
+            width: { xs: "100%", sm: "auto" },
+            maxWidth: { xs: "300px", sm: "none" },
           }}
           onClick={() => setOpenAddDialog(true)}
         >
@@ -369,7 +419,7 @@ const TaskManagementBoard = () => {
                 Created at: {formatDate(viewTask.createdAt)}
               </Typography>
               <Typography variant="body2">
-                End Date: {viewTask.endDate}
+                Due Date: {formatDate(viewTask.dueDate)}
               </Typography>
             </>
           )}
@@ -440,9 +490,7 @@ const TaskManagementBoard = () => {
             label="Title"
             fullWidth
             value={newTask.title}
-            onChange={(e) =>
-              setNewTask({ ...newTask, title: e.target.value })
-            }
+            onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
             sx={{
               mb: 2,
               mt: 1,
@@ -459,6 +507,19 @@ const TaskManagementBoard = () => {
             onChange={(e) =>
               setNewTask({ ...newTask, description: e.target.value })
             }
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Due Date"
+            type="date"
+            fullWidth
+            value={newTask.dueDate || ""}
+            onChange={(e) =>
+              setNewTask({ ...newTask, dueDate: e.target.value })
+            }
+            InputLabelProps={{
+              shrink: true,
+            }}
             sx={{ mb: 2 }}
           />
           <FormControl fullWidth>
@@ -485,8 +546,8 @@ const TaskManagementBoard = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <ToastContainer />
     </Box>
-    
   );
 };
 

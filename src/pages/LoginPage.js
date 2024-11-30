@@ -161,6 +161,7 @@ const LoginPage = () => {
                   color="primary"
                   fullWidth
                   style={{ backgroundColor: "#1976d2" }}
+                  onClick={() => window.location.href = "http://localhost:5000/api/auth"}
                 >
                   Login with Google
                 </Button>

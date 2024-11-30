@@ -1,12 +1,11 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Link, Box, Avatar } from '@mui/material';
+import React  from 'react';
+import { AppBar, Toolbar, Typography, Button, Link, Box, Avatar, IconButton, Menu, MenuItem, Tooltip, Badge } from '@mui/material';
 
 const Navbar = () => {
     const userName = localStorage.getItem('userName');
-    const imageUrl = localStorage.getItem('imageUrl')
-  const isLoggedIn = !!userName;
-  const firstName = userName ? userName.split(' ')[0] : '';
-
+    const imageUrl = localStorage.getItem('imageUrl');
+    const isLoggedIn = !!userName;
+    const firstName = userName ? userName.split(' ')[0] : '';
   const handleLogout = () => {
     // Remove the userName and token from localStorage
     localStorage.removeItem('userName');
